@@ -8,6 +8,9 @@
 
 #include "../config.hpp"
 
+enum chess {
+  EMPTY, PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING
+};
 
 typedef std::pair<size_t, size_t> Point;
 typedef std::pair<Point, Point> Move;

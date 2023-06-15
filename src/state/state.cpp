@@ -13,7 +13,56 @@
  */
 int State::evaluate(){
   // [TODO] design your own evaluation function
-  return 0;
+  int whiteScore = 0, blackScore = 0;
+  for (int i = 0; i < BOARD_H; i++) {
+    for (int j = 0; j < BOARD_W; j++) {
+      switch((chess)(board.board[0][i][j])) {
+        case PAWN:
+          whiteScore += 1;
+          break;
+        case ROOK:
+          whiteScore += 3;
+          break;
+        case KNIGHT:
+          whiteScore += 2;
+          break;
+        case BISHOP:
+          whiteScore += 3;
+          break;
+        case QUEEN:
+          whiteScore += 5;
+          break;
+        case KING:
+          whiteScore += 1000000;
+          break;
+        default:
+          break;
+      }
+      switch((chess)(board.board[1][i][j])) {
+        case PAWN:
+          blackScore += 1;
+          break;
+        case ROOK:
+          blackScore += 3;
+          break;
+        case KNIGHT:
+          blackScore += 2;
+          break;
+        case BISHOP:
+          blackScore += 3;
+          break;
+        case QUEEN:
+          blackScore += 5;
+          break;
+        case KING:
+          blackScore += 1000000;
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  return player ? whiteScore - blackScore : blackScore - whiteScore;
 }
 
 
