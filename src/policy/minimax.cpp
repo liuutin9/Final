@@ -57,7 +57,3 @@ int countMinimax(State* state, int depth) {
   if (depth % 2 == 0) return rt_max;
   else return rt_min;
 }
-
-int minimax(State *state, int depth) {
-  
-}
