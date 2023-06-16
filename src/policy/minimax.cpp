@@ -12,10 +12,6 @@
  * @param depth You may need this for other policy
  * @return Move 
  */
-
-int countMinimax(State* state, int depth);
-Move getMinimax(State* state, int depth);
-
 Move Minimax::get_move(State *state, int depth){
   if(!state->legal_actions.size())
     state->get_legal_actions();
@@ -60,4 +56,8 @@ int countMinimax(State* state, int depth) {
   }
   if (depth % 2 == 0) return rt_max;
   else return rt_min;
+}
+
+int minimax(State *state, int depth) {
+  
 }
