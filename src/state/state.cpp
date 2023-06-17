@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstdint>
+#include <limits.h>
 
 #include "./state.hpp"
 #include "../config.hpp"
@@ -14,54 +15,174 @@
 int State::evaluate(){
   // [TODO] design your own evaluation function
   int whiteScore = 0, blackScore = 0;
+  int kMov[8][2] = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
+  int kingMov[8][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+  bool grid[2][6][5] = {false};
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
       switch((chess)(board.board[0][i][j])) {
         case PAWN:
-          whiteScore += 1;
+          whiteScore += 2;
+          if (board.board[0][i - 1][j + 1]) grid[1][i - 1][j + 1] = true;
+          if (board.board[0][i - 1][j - 1]) grid[1][i - 1][j - 1] = true;
           break;
         case ROOK:
-          whiteScore += 3;
+          whiteScore += 6;
+          for (int k = 0; k < BOARD_W; k++)
+            if (k != j && board.board[0][i][k]) grid[1][i][k] = true;
+          for (int k = 0; k < BOARD_H; k++)
+            if (k != i && board.board[0][k][j]) grid[1][k][j] = true;
           break;
         case KNIGHT:
-          whiteScore += 2;
+          whiteScore += 7;
+          for (int k = 0; k < 8; k++) {
+            if (!board.board[0][i + kMov[k][0]][j + kMov[k][1]]) {
+              grid[1][i + kMov[k][0]][j + kMov[k][1]] = true;
+            }
+          }
           break;
         case BISHOP:
-          whiteScore += 3;
+          whiteScore += 8;
+          for (int h = 0; h < BOARD_H; h++) {
+            for (int w = 0; w < BOARD_W; w++) {
+              if (abs(i - h) == abs(j - w) && !board.board[0][h][w])
+                grid[1][h][w] = true;
+            }
+          }
           break;
         case QUEEN:
-          whiteScore += 5;
+          whiteScore += 20;
+          for (int h = 0; h < BOARD_H; h++) {
+            for (int w = 0; w < BOARD_W; w++) {
+              if (h == i && !board.board[0][h][w])
+                grid[1][h][w] = true;
+              if (w == j && !board.board[0][h][w])
+                grid[1][h][w] = true;
+              if (abs(i - h) == abs(j - w) && !board.board[0][h][w])
+                grid[1][h][w] = true;
+            }
+          }
           break;
         case KING:
-          whiteScore += 1000000;
+          for (int k = 0; k < 8; k++) {
+            if (!board.board[0][i + kingMov[k][0]][j + kingMov[k][1]]) {
+              grid[1][i + kingMov[k][0]][j + kingMov[k][1]] = true;
+            }
+          }
           break;
         default:
           break;
       }
       switch((chess)(board.board[1][i][j])) {
         case PAWN:
-          blackScore += 1;
+          blackScore += 2;
+          if (board.board[1][i - 1][j + 1]) grid[0][i - 1][j + 1] = true;
+          if (board.board[1][i - 1][j - 1]) grid[0][i - 1][j - 1] = true;
           break;
         case ROOK:
-          blackScore += 3;
+          blackScore += 6;
+          for (int k = 0; k < BOARD_W; k++)
+            if (k != j && board.board[1][i][k]) grid[0][i][k] = true;
+          for (int k = 0; k < BOARD_H; k++)
+            if (k != i && board.board[1][k][j]) grid[0][k][j] = true;
           break;
         case KNIGHT:
-          blackScore += 2;
+          blackScore += 7;
+          for (int k = 0; k < 8; k++) {
+            if (!board.board[1][i + kMov[k][0]][j + kMov[k][1]]) {
+              grid[0][i + kMov[k][0]][j + kMov[k][1]] = true;
+            }
+          }
           break;
         case BISHOP:
-          blackScore += 3;
+          blackScore += 8;
+          for (int h = 0; h < BOARD_H; h++) {
+            for (int w = 0; w < BOARD_W; w++) {
+              if (abs(i - h) == abs(j - w) && !board.board[1][h][w])
+                grid[0][h][w] = true;
+            }
+          }
           break;
         case QUEEN:
-          blackScore += 5;
+          blackScore += 20;
+          for (int h = 0; h < BOARD_H; h++) {
+            for (int w = 0; w < BOARD_W; w++) {
+              if (h == i && !board.board[1][h][w])
+                grid[0][h][w] = true;
+              if (w == j && !board.board[1][h][w])
+                grid[0][h][w] = true;
+              if (abs(i - h) == abs(j - w) && !board.board[1][h][w])
+                grid[0][h][w] = true;
+            }
+          }
           break;
         case KING:
-          blackScore += 1000000;
+          for (int k = 0; k < 8; k++) {
+            if (!board.board[0][i + kingMov[k][0]][j + kingMov[k][1]]) {
+              grid[1][i + kingMov[k][0]][j + kingMov[k][1]] = true;
+            }
+          }
           break;
         default:
           break;
       }
     }
   }
+
+  for (int i = 0; i < BOARD_H; i++) {
+    for (int j = 0; j < BOARD_W; j++) {
+      if (grid[0][i][j]) {
+        switch((chess)(board.board[0][i][j])) {
+          case PAWN:
+            if (whiteScore != INT_MIN) whiteScore -= 1;
+            break;
+          case ROOK:
+            if (whiteScore != INT_MIN) whiteScore -= 3;
+            break;
+          case KNIGHT:
+            if (whiteScore != INT_MIN) whiteScore -= 3;
+            break;
+          case BISHOP:
+            if (whiteScore != INT_MIN) whiteScore -= 4;
+            break;
+          case QUEEN:
+            if (whiteScore != INT_MIN) whiteScore -= 10;
+            break;
+          case KING:
+            whiteScore = INT_MIN;
+            break;
+          default:
+            break;
+        }
+      }
+      
+      if (grid[1][i][j]) {
+        switch((chess)(board.board[1][i][j])) {
+          case PAWN:
+            if (blackScore != INT_MIN) blackScore -= 1;
+            break;
+          case ROOK:
+            if (blackScore != INT_MIN) blackScore -= 3;
+            break;
+          case KNIGHT:
+            if (blackScore != INT_MIN) blackScore -= 3;
+            break;
+          case BISHOP:
+            if (blackScore != INT_MIN) blackScore -= 4;
+            break;
+          case QUEEN:
+            if (blackScore != INT_MIN) blackScore -= 10;
+            break;
+          case KING:
+            blackScore = INT_MIN;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
   return player ? whiteScore - blackScore : blackScore - whiteScore;
 }
 
