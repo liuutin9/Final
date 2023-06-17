@@ -23,6 +23,7 @@ int State::evaluate(){
       switch((chess)(board.board[0][i][j])) {
         case PAWN:
           whiteScore += 2;
+          if (i == 0) whiteScore += 2;
           if (board.board[0][i - 1][j + 1]) grid[1][i - 1][j + 1] = true;
           if (board.board[0][i - 1][j - 1]) grid[1][i - 1][j - 1] = true;
           break;
@@ -76,6 +77,7 @@ int State::evaluate(){
       switch((chess)(board.board[1][i][j])) {
         case PAWN:
           blackScore += 2;
+          if (i == BOARD_H - 1) blackScore += 2;
           if (board.board[1][i - 1][j + 1]) grid[0][i - 1][j + 1] = true;
           if (board.board[1][i - 1][j - 1]) grid[0][i - 1][j - 1] = true;
           break;
@@ -134,22 +136,22 @@ int State::evaluate(){
       if (grid[0][i][j]) {
         switch((chess)(board.board[0][i][j])) {
           case PAWN:
-            if (whiteScore != INT_MIN) whiteScore -= 1;
+            whiteScore -= 1;
             break;
           case ROOK:
-            if (whiteScore != INT_MIN) whiteScore -= 3;
+            whiteScore -= 3;
             break;
           case KNIGHT:
-            if (whiteScore != INT_MIN) whiteScore -= 3;
+            whiteScore -= 3;
             break;
           case BISHOP:
-            if (whiteScore != INT_MIN) whiteScore -= 4;
+            whiteScore -= 4;
             break;
           case QUEEN:
-            if (whiteScore != INT_MIN) whiteScore -= 10;
+            whiteScore -= 10;
             break;
           case KING:
-            whiteScore = INT_MIN;
+            whiteScore -= 1000000;
             break;
           default:
             break;
@@ -159,22 +161,22 @@ int State::evaluate(){
       if (grid[1][i][j]) {
         switch((chess)(board.board[1][i][j])) {
           case PAWN:
-            if (blackScore != INT_MIN) blackScore -= 1;
+            blackScore -= 1;
             break;
           case ROOK:
-            if (blackScore != INT_MIN) blackScore -= 3;
+            blackScore -= 3;
             break;
           case KNIGHT:
-            if (blackScore != INT_MIN) blackScore -= 3;
+            blackScore -= 3;
             break;
           case BISHOP:
-            if (blackScore != INT_MIN) blackScore -= 4;
+            blackScore -= 4;
             break;
           case QUEEN:
-            if (blackScore != INT_MIN) blackScore -= 10;
+            blackScore -= 10;
             break;
           case KING:
-            blackScore = INT_MIN;
+            blackScore -= 1000000;
             break;
           default:
             break;
