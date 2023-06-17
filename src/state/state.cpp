@@ -6,6 +6,7 @@
 #include "./state.hpp"
 #include "../config.hpp"
 
+int scoreTable[7] = {0, 20, 60, 70, 80, 200, 0};
 
 /**
  * @brief evaluate the state
@@ -20,53 +21,50 @@ int State::evaluate(){
   bool grid[2][6][5] = {false};
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
-      switch((chess)(board.board[0][i][j])) {
+      whiteScore += scoreTable[board.board[0][i][j] - '0'];
+      blackScore += scoreTable[board.board[1][i][j] - '0'];
+      switch((chess)(board.board[0][i][j] - '0')) {
         case PAWN:
-          whiteScore += 2;
-          if (i == 0) whiteScore += 2;
-          if (board.board[0][i - 1][j + 1]) grid[1][i - 1][j + 1] = true;
-          if (board.board[0][i - 1][j - 1]) grid[1][i - 1][j - 1] = true;
+          if (i == 0) whiteScore += 5;
+          if (board.board[0][i - 1][j + 1] > '0') grid[1][i - 1][j + 1] = true;
+          if (board.board[0][i - 1][j - 1] > '0') grid[1][i - 1][j - 1] = true;
           break;
         case ROOK:
-          whiteScore += 6;
           for (int k = 0; k < BOARD_W; k++)
-            if (k != j && board.board[0][i][k]) grid[1][i][k] = true;
+            if (k != j && board.board[0][i][k] > '0') grid[1][i][k] = true;
           for (int k = 0; k < BOARD_H; k++)
-            if (k != i && board.board[0][k][j]) grid[1][k][j] = true;
+            if (k != i && board.board[0][k][j] > '0') grid[1][k][j] = true;
           break;
         case KNIGHT:
-          whiteScore += 7;
           for (int k = 0; k < 8; k++) {
-            if (!board.board[0][i + kMov[k][0]][j + kMov[k][1]]) {
+            if (board.board[0][i + kMov[k][0]][j + kMov[k][1]] > '0') {
               grid[1][i + kMov[k][0]][j + kMov[k][1]] = true;
             }
           }
           break;
         case BISHOP:
-          whiteScore += 8;
           for (int h = 0; h < BOARD_H; h++) {
             for (int w = 0; w < BOARD_W; w++) {
-              if (abs(i - h) == abs(j - w) && !board.board[0][h][w])
+              if (abs(i - h) == abs(j - w) && board.board[0][h][w] > '0')
                 grid[1][h][w] = true;
             }
           }
           break;
         case QUEEN:
-          whiteScore += 20;
           for (int h = 0; h < BOARD_H; h++) {
             for (int w = 0; w < BOARD_W; w++) {
-              if (h == i && !board.board[0][h][w])
+              if (h == i && board.board[0][h][w] > '0')
                 grid[1][h][w] = true;
-              if (w == j && !board.board[0][h][w])
+              if (w == j && board.board[0][h][w] > '0')
                 grid[1][h][w] = true;
-              if (abs(i - h) == abs(j - w) && !board.board[0][h][w])
+              if (abs(i - h) == abs(j - w) && board.board[0][h][w] > '0')
                 grid[1][h][w] = true;
             }
           }
           break;
         case KING:
           for (int k = 0; k < 8; k++) {
-            if (!board.board[0][i + kingMov[k][0]][j + kingMov[k][1]]) {
+            if (board.board[0][i + kingMov[k][0]][j + kingMov[k][1]] > '0') {
               grid[1][i + kingMov[k][0]][j + kingMov[k][1]] = true;
             }
           }
@@ -74,53 +72,48 @@ int State::evaluate(){
         default:
           break;
       }
-      switch((chess)(board.board[1][i][j])) {
+      switch((chess)(board.board[1][i][j] - '0')) {
         case PAWN:
-          blackScore += 2;
-          if (i == BOARD_H - 1) blackScore += 2;
-          if (board.board[1][i - 1][j + 1]) grid[0][i - 1][j + 1] = true;
-          if (board.board[1][i - 1][j - 1]) grid[0][i - 1][j - 1] = true;
+          if (i == BOARD_H - 1) blackScore += 5;
+          if (board.board[1][i - 1][j + 1] > '0') grid[0][i - 1][j + 1] = true;
+          if (board.board[1][i - 1][j - 1] > '0') grid[0][i - 1][j - 1] = true;
           break;
         case ROOK:
-          blackScore += 6;
           for (int k = 0; k < BOARD_W; k++)
-            if (k != j && board.board[1][i][k]) grid[0][i][k] = true;
+            if (k != j && board.board[1][i][k] > '0') grid[0][i][k] = true;
           for (int k = 0; k < BOARD_H; k++)
-            if (k != i && board.board[1][k][j]) grid[0][k][j] = true;
+            if (k != i && board.board[1][k][j] > '0') grid[0][k][j] = true;
           break;
         case KNIGHT:
-          blackScore += 7;
           for (int k = 0; k < 8; k++) {
-            if (!board.board[1][i + kMov[k][0]][j + kMov[k][1]]) {
+            if (board.board[1][i + kMov[k][0]][j + kMov[k][1]] > '0') {
               grid[0][i + kMov[k][0]][j + kMov[k][1]] = true;
             }
           }
           break;
         case BISHOP:
-          blackScore += 8;
           for (int h = 0; h < BOARD_H; h++) {
             for (int w = 0; w < BOARD_W; w++) {
-              if (abs(i - h) == abs(j - w) && !board.board[1][h][w])
+              if (abs(i - h) == abs(j - w) && board.board[1][h][w] > '0')
                 grid[0][h][w] = true;
             }
           }
           break;
         case QUEEN:
-          blackScore += 20;
           for (int h = 0; h < BOARD_H; h++) {
             for (int w = 0; w < BOARD_W; w++) {
-              if (h == i && !board.board[1][h][w])
+              if (h == i && board.board[1][h][w] > '0')
                 grid[0][h][w] = true;
-              if (w == j && !board.board[1][h][w])
+              if (w == j && board.board[1][h][w] > '0')
                 grid[0][h][w] = true;
-              if (abs(i - h) == abs(j - w) && !board.board[1][h][w])
+              if (abs(i - h) == abs(j - w) && board.board[1][h][w] > '0')
                 grid[0][h][w] = true;
             }
           }
           break;
         case KING:
           for (int k = 0; k < 8; k++) {
-            if (!board.board[0][i + kingMov[k][0]][j + kingMov[k][1]]) {
+            if (board.board[0][i + kingMov[k][0]][j + kingMov[k][1]] > '0') {
               grid[1][i + kingMov[k][0]][j + kingMov[k][1]] = true;
             }
           }
@@ -134,21 +127,21 @@ int State::evaluate(){
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
       if (grid[0][i][j]) {
-        switch((chess)(board.board[0][i][j])) {
+        switch((chess)(board.board[0][i][j] - '0')) {
           case PAWN:
-            whiteScore -= 1;
+            whiteScore -= 2;
             break;
           case ROOK:
-            whiteScore -= 3;
+            whiteScore -= 6;
             break;
           case KNIGHT:
-            whiteScore -= 3;
+            whiteScore -= 7;
             break;
           case BISHOP:
-            whiteScore -= 4;
+            whiteScore -= 8;
             break;
           case QUEEN:
-            whiteScore -= 10;
+            whiteScore -= 20;
             break;
           case KING:
             whiteScore -= 1000000;
@@ -159,21 +152,21 @@ int State::evaluate(){
       }
       
       if (grid[1][i][j]) {
-        switch((chess)(board.board[1][i][j])) {
+        switch((chess)(board.board[1][i][j] - '0')) {
           case PAWN:
-            blackScore -= 1;
+            blackScore -= 2;
             break;
           case ROOK:
-            blackScore -= 3;
+            blackScore -= 6;
             break;
           case KNIGHT:
-            blackScore -= 3;
+            blackScore -= 7;
             break;
           case BISHOP:
-            blackScore -= 4;
+            blackScore -= 8;
             break;
           case QUEEN:
-            blackScore -= 10;
+            blackScore -= 20;
             break;
           case KING:
             blackScore -= 1000000;
