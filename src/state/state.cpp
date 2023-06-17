@@ -354,9 +354,9 @@ int State::evaluate(){
   }
 
   if (whiteMinus < 1000000)
-    whiteMinus = whiteMayBeKilled ? whiteMinus * 0.2/*/ whiteMayBeKilled*/ : 0;
+    whiteMinus = whiteMayBeKilled ? whiteMinus / whiteMayBeKilled : 0;
   if (blackMinus < 1000000)
-    blackMinus = blackMayBeKilled ? blackMinus * 0.2/*/ blackMayBeKilled*/ : 0;
+    blackMinus = blackMayBeKilled ? blackMinus / blackMayBeKilled : 0;
 
   return player ? ((whiteScore - whiteMinus) - (blackScore - blackMinus)) : ((blackScore - blackMinus) - (whiteScore - whiteMinus));
 }
