@@ -40,7 +40,9 @@ int countMinimax(State* state, int depth) {
   int rt_min = INT_MAX;
 
   if (!state->legal_actions.size()) {
-    return state->evaluate();
+    state->get_legal_actions();
+    if (!state->legal_actions.size())
+      return state->evaluate();
   }
 
   for (Move it : state->legal_actions) {
