@@ -27,46 +27,145 @@ int State::evaluate(){
       blackScore += scoreTable[board.board[1][i][j] - '0'];
       switch((chess)(board.board[0][i][j] - '0')) {
         case PAWN:
-          if (i == 0) whiteScore += 5;
-          if (board.board[0][i - 1][j + 1] > '0') grid[1][i - 1][j + 1] = true;
-          if (board.board[0][i - 1][j - 1] > '0') grid[1][i - 1][j - 1] = true;
+          grid[1][i - 1][j + 1] = true;
+          grid[1][i - 1][j - 1] = true;
           break;
         case ROOK:
-          for (int k = 0; k < BOARD_W; k++)
-            if (k != j && board.board[0][i][k] > '0') grid[1][i][k] = true;
-          for (int k = 0; k < BOARD_H; k++)
-            if (k != i && board.board[0][k][j] > '0') grid[1][k][j] = true;
+          for (int k = j + 1; k < BOARD_W; k++) {
+            //if (board.board[0][i][k] > '0') break;
+            if (board.board[1][i][k] > '0') {
+              grid[1][i][k] = true;
+              break;
+            }
+          }
+          for (int k = j - 1; k < BOARD_W; k--) {
+            //if (board.board[0][i][k] > '0') break;
+            if (board.board[1][i][k] > '0') {
+              grid[1][i][k] = true;
+              break;
+            }
+          }
+          for (int k = i + 1; k < BOARD_H; k++) {
+            //if (board.board[0][k][j] > '0') break;
+            if (board.board[1][k][j] > '0') {
+              grid[1][k][j] = true;
+              break;
+            }
+          }
+          for (int k = i - 1; k < BOARD_H; k--) {
+            //if (board.board[0][k][j] > '0') break;
+            if (board.board[1][k][j] > '0') {
+              grid[1][k][j] = true;
+              break;
+            }
+          }
           break;
         case KNIGHT:
           for (int k = 0; k < 8; k++) {
-            if (board.board[0][i + kMov[k][0]][j + kMov[k][1]] > '0') {
+            if (board.board[1][i + kMov[k][0]][j + kMov[k][1]] > '0') {
               grid[1][i + kMov[k][0]][j + kMov[k][1]] = true;
             }
           }
           break;
         case BISHOP:
-          for (int h = 0; h < BOARD_H; h++) {
-            for (int w = 0; w < BOARD_W; w++) {
-              if (abs(i - h) == abs(j - w) && board.board[0][h][w] > '0')
-                grid[1][h][w] = true;
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i + k >= BOARD_H || j + k >= BOARD_W) break;
+            //if (board.board[0][i + k][j + k] > '0') break;
+            if (board.board[1][i + k][j + k] > '0') {
+              grid[1][i + k][j + k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i - k < 0 || j - k < 0) break;
+            //if (board.board[0][i - k][j - k] > '0') break;
+            if (board.board[1][i - k][j - k] > '0') {
+              grid[1][i - k][j - k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i - k < 0 || j + k >= BOARD_W) break;
+            //if (board.board[0][i - k][j + k] > '0') break;
+            if (board.board[1][i - k][j + k] > '0') {
+              grid[1][i - k][j + k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i + k >= BOARD_H || j - k < 0) break;
+            //if (board.board[0][i + k][j - k] > '0') break;
+            if (board.board[1][i + k][j - k] > '0') {
+              grid[1][i + k][j - k] = true;
+              break;
             }
           }
           break;
         case QUEEN:
-          for (int h = 0; h < BOARD_H; h++) {
-            for (int w = 0; w < BOARD_W; w++) {
-              if (h == i && board.board[0][h][w] > '0')
-                grid[1][h][w] = true;
-              if (w == j && board.board[0][h][w] > '0')
-                grid[1][h][w] = true;
-              if (abs(i - h) == abs(j - w) && board.board[0][h][w] > '0')
-                grid[1][h][w] = true;
+          for (int k = j + 1; k < BOARD_W; k++) {
+            //if (board.board[0][i][k] > '0') break;
+            if (board.board[1][i][k] > '0') {
+              grid[1][i][k] = true;
+              break;
+            }
+          }
+          for (int k = j - 1; k < BOARD_W; k--) {
+            //if (board.board[0][i][k] > '0') break;
+            if (board.board[1][i][k] > '0') {
+              grid[1][i][k] = true;
+              break;
+            }
+          }
+          for (int k = i + 1; k < BOARD_H; k++) {
+            //if (board.board[0][k][j] > '0') break;
+            if (board.board[1][k][j] > '0') {
+              grid[1][k][j] = true;
+              break;
+            }
+          }
+          for (int k = i - 1; k < BOARD_H; k--) {
+            //if (board.board[0][k][j] > '0') break;
+            if (board.board[1][k][j] > '0') {
+              grid[1][k][j] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i + k >= BOARD_H || j + k >= BOARD_W) break;
+            //if (board.board[0][i + k][j + k] > '0') break;
+            if (board.board[1][i + k][j + k] > '0') {
+              grid[1][i + k][j + k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i - k < 0 || j - k < 0) break;
+            //if (board.board[0][i - k][j - k] > '0') break;
+            if (board.board[1][i - k][j - k] > '0') {
+              grid[1][i - k][j - k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i - k < 0 || j + k >= BOARD_W) break;
+            //if (board.board[0][i - k][j + k] > '0') break;
+            if (board.board[1][i - k][j + k] > '0') {
+              grid[1][i - k][j + k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i + k >= BOARD_H || j - k < 0) break;
+            //if (board.board[0][i + k][j - k] > '0') break;
+            if (board.board[1][i + k][j - k] > '0') {
+              grid[1][i + k][j - k] = true;
+              break;
             }
           }
           break;
         case KING:
           for (int k = 0; k < 8; k++) {
-            if (board.board[0][i + kingMov[k][0]][j + kingMov[k][1]] > '0') {
+            if (board.board[1][i + kingMov[k][0]][j + kingMov[k][1]] > '0') {
               grid[1][i + kingMov[k][0]][j + kingMov[k][1]] = true;
             }
           }
@@ -74,49 +173,149 @@ int State::evaluate(){
         default:
           break;
       }
+
       switch((chess)(board.board[1][i][j] - '0')) {
         case PAWN:
-          if (i == BOARD_H - 1) blackScore += 5;
-          if (board.board[1][i - 1][j + 1] > '0') grid[0][i - 1][j + 1] = true;
-          if (board.board[1][i - 1][j - 1] > '0') grid[0][i - 1][j - 1] = true;
+          grid[0][i - 1][j + 1] = true;
+          grid[0][i - 1][j - 1] = true;
           break;
         case ROOK:
-          for (int k = 0; k < BOARD_W; k++)
-            if (k != j && board.board[1][i][k] > '0') grid[0][i][k] = true;
-          for (int k = 0; k < BOARD_H; k++)
-            if (k != i && board.board[1][k][j] > '0') grid[0][k][j] = true;
+          for (int k = j + 1; k < BOARD_W; k++) {
+            //if (board.board[1][i][k] > '0') break;
+            if (board.board[0][i][k] > '0') {
+              grid[0][i][k] = true;
+              break;
+            }
+          }
+          for (int k = j - 1; k < BOARD_W; k--) {
+            //if (board.board[1][i][k] > '0') break;
+            if (board.board[0][i][k] > '0') {
+              grid[0][i][k] = true;
+              break;
+            }
+          }
+          for (int k = i + 1; k < BOARD_H; k++) {
+            //if (board.board[1][k][j] > '0') break;
+            if (board.board[0][k][j] > '0') {
+              grid[0][k][j] = true;
+              break;
+            }
+          }
+          for (int k = i - 1; k < BOARD_H; k--) {
+            //if (board.board[1][k][j] > '0') break;
+            if (board.board[0][k][j] > '0') {
+              grid[0][k][j] = true;
+              break;
+            }
+          }
           break;
         case KNIGHT:
           for (int k = 0; k < 8; k++) {
-            if (board.board[1][i + kMov[k][0]][j + kMov[k][1]] > '0') {
+            if (board.board[0][i + kMov[k][0]][j + kMov[k][1]] > '0') {
               grid[0][i + kMov[k][0]][j + kMov[k][1]] = true;
             }
           }
           break;
         case BISHOP:
-          for (int h = 0; h < BOARD_H; h++) {
-            for (int w = 0; w < BOARD_W; w++) {
-              if (abs(i - h) == abs(j - w) && board.board[1][h][w] > '0')
-                grid[0][h][w] = true;
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i + k >= BOARD_H || j + k >= BOARD_W) break;
+            //if (board.board[1][i + k][j + k] > '0') break;
+            if (board.board[0][i + k][j + k] > '0') {
+              grid[0][i + k][j + k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i - k < 0 || j - k < 0) break;
+            //if (board.board[1][i - k][j - k] > '0') break;
+            if (board.board[0][i - k][j - k] > '0') {
+              grid[0][i - k][j - k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i - k < 0 || j + k >= BOARD_W) break;
+            //if (board.board[1][i - k][j + k] > '0') break;
+            if (board.board[0][i - k][j + k] > '0') {
+              grid[0][i - k][j + k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i + k >= BOARD_H || j - k < 0) break;
+            //if (board.board[1][i + k][j - k] > '0') break;
+            if (board.board[0][i + k][j - k] > '0') {
+              grid[0][i + k][j - k] = true;
+              break;
             }
           }
           break;
         case QUEEN:
-          for (int h = 0; h < BOARD_H; h++) {
-            for (int w = 0; w < BOARD_W; w++) {
-              if (h == i && board.board[1][h][w] > '0')
-                grid[0][h][w] = true;
-              if (w == j && board.board[1][h][w] > '0')
-                grid[0][h][w] = true;
-              if (abs(i - h) == abs(j - w) && board.board[1][h][w] > '0')
-                grid[0][h][w] = true;
+          for (int k = j + 1; k < BOARD_W; k++) {
+            //if (board.board[1][i][k] > '0') break;
+            if (board.board[0][i][k] > '0') {
+              grid[0][i][k] = true;
+              break;
+            }
+          }
+          for (int k = j - 1; k < BOARD_W; k--) {
+            //if (board.board[1][i][k] > '0') break;
+            if (board.board[0][i][k] > '0') {
+              grid[0][i][k] = true;
+              break;
+            }
+          }
+          for (int k = i + 1; k < BOARD_H; k++) {
+            //if (board.board[1][k][j] > '0') break;
+            if (board.board[0][k][j] > '0') {
+              grid[0][k][j] = true;
+              break;
+            }
+          }
+          for (int k = i - 1; k < BOARD_H; k--) {
+            //if (board.board[1][k][j] > '0') break;
+            if (board.board[0][k][j] > '0') {
+              grid[0][k][j] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i + k >= BOARD_H || j + k >= BOARD_W) break;
+            //if (board.board[1][i + k][j + k] > '0') break;
+            if (board.board[0][i + k][j + k] > '0') {
+              grid[0][i + k][j + k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i - k < 0 || j - k < 0) break;
+            //if (board.board[1][i - k][j - k] > '0') break;
+            if (board.board[0][i - k][j - k] > '0') {
+              grid[0][i - k][j - k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i - k < 0 || j + k >= BOARD_W) break;
+            //if (board.board[1][i - k][j + k] > '0') break;
+            if (board.board[0][i - k][j + k] > '0') {
+              grid[0][i - k][j + k] = true;
+              break;
+            }
+          }
+          for (int k = 1; k < BOARD_H; k++) {
+            if (i + k >= BOARD_H || j - k < 0) break;
+            //if (board.board[1][i + k][j - k] > '0') break;
+            if (board.board[0][i + k][j - k] > '0') {
+              grid[0][i + k][j - k] = true;
+              break;
             }
           }
           break;
         case KING:
           for (int k = 0; k < 8; k++) {
             if (board.board[0][i + kingMov[k][0]][j + kingMov[k][1]] > '0') {
-              grid[1][i + kingMov[k][0]][j + kingMov[k][1]] = true;
+              grid[0][i + kingMov[k][0]][j + kingMov[k][1]] = true;
             }
           }
           break;
@@ -131,17 +330,33 @@ int State::evaluate(){
       if (grid[0][i][j]) {
         whiteMinus += scoreTable[board.board[0][i][j] - '0'];
         if (board.board[0][i][j] > '0') whiteMayBeKilled++;
+        if (board.board[0][i][j] == '5') {
+          whiteMinus += scoreTable[board.board[0][i][j] - '0'];
+        }
+        if (board.board[0][i][j] == '6') {
+          if (player) return INT_MAX;
+          else return INT_MIN;
+        }
       }
       
       if (grid[1][i][j]) {
         blackMinus += scoreTable[board.board[1][i][j] - '0'];
         if (board.board[1][i][j] > '0') blackMayBeKilled++;
+        if (board.board[1][i][j] == '5') {
+          blackMinus += scoreTable[board.board[1][i][j] - '0'];
+        }
+        if (board.board[1][i][j] == '6') {
+          if (player) return INT_MIN;
+          else return INT_MAX;
+        }
       }
     }
   }
 
-  whiteMinus = whiteMayBeKilled ? whiteMinus / whiteMayBeKilled : 0;
-  blackMinus = blackMayBeKilled ? blackMinus / blackMayBeKilled : 0;
+  if (whiteMinus < 1000000)
+    whiteMinus = whiteMayBeKilled ? whiteMinus * 0.2/*/ whiteMayBeKilled*/ : 0;
+  if (blackMinus < 1000000)
+    blackMinus = blackMayBeKilled ? blackMinus * 0.2/*/ blackMayBeKilled*/ : 0;
 
   return player ? ((whiteScore - whiteMinus) - (blackScore - blackMinus)) : ((blackScore - blackMinus) - (whiteScore - whiteMinus));
 }
