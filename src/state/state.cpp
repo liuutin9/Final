@@ -23,7 +23,7 @@ int State::evaluate(){
     for (int j = 0; j < BOARD_W; j++) {
       whiteScore += scoreTable[board.board[0][i][j] - '0'];
       blackScore += scoreTable[board.board[1][i][j] - '0'];
-      switch((chess)(board.board[0][i][j] - '0')) {
+      switch(board.board[0][i][j] - '0') {
         case PAWN:
           if (i == 0) whiteScore += 5;
           if (board.board[0][i - 1][j + 1] > '0') grid[1][i - 1][j + 1] = true;
@@ -72,7 +72,7 @@ int State::evaluate(){
         default:
           break;
       }
-      switch((chess)(board.board[1][i][j] - '0')) {
+      switch(board.board[1][i][j] - '0') {
         case PAWN:
           if (i == BOARD_H - 1) blackScore += 5;
           if (board.board[1][i - 1][j + 1] > '0') grid[0][i - 1][j + 1] = true;
@@ -127,7 +127,7 @@ int State::evaluate(){
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
       if (grid[0][i][j]) {
-        switch((chess)(board.board[0][i][j] - '0')) {
+        switch(board.board[0][i][j] - '0') {
           case PAWN:
             whiteScore -= 2;
             break;
@@ -152,7 +152,7 @@ int State::evaluate(){
       }
       
       if (grid[1][i][j]) {
-        switch((chess)(board.board[1][i][j] - '0')) {
+        switch(board.board[1][i][j] - '0') {
           case PAWN:
             blackScore -= 2;
             break;
