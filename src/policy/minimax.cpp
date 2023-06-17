@@ -46,7 +46,7 @@ int countMinimax(State* state, int depth) {
   }
 
   for (Move it : state->legal_actions) {
-    if (depth == 5) return state->evaluate();
+    if (depth == 3) return state->evaluate();
     else if (depth % 2 == 0) {
       int result = countMinimax(state->next_state(it), depth + 1);
       rt_max = rt_max > result ? rt_max : result;
