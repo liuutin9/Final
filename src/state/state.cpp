@@ -128,7 +128,6 @@ int State::evaluate(){
 
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
-      // std::cout << "kkk\n";
       if (grid[0][i][j]) {
         whiteMinus += scoreTable[board.board[0][i][j] - '0'];
         if (board.board[0][i][j] > '0') whiteMayBeKilled++;
@@ -141,7 +140,10 @@ int State::evaluate(){
     }
   }
 
-  return player ? whiteScore - whiteMinus / whiteMayBeKilled - blackMinus / blackMayBeKilled - blackScore : blackScore - blackMinus / blackMayBeKilled - whiteMinus / whiteMayBeKilled - whiteScore;
+  whiteMinus = whiteMayBeKilled ? whiteMinus / whiteMayBeKilled : 0;
+  blackMinus = blackMayBeKilled ? blackMinus / blackMayBeKilled : 0;
+
+  return player ? ((whiteScore - whiteMinus) - (blackScore - blackMinus)) : ((blackScore - blackMinus) - (whiteScore - whiteMinus));
 }
 
 
