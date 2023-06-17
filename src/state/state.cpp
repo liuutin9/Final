@@ -16,6 +16,8 @@ int scoreTable[7] = {0, 20, 60, 70, 80, 200, 0};
 int State::evaluate(){
   // [TODO] design your own evaluation function
   int whiteScore = 0, blackScore = 0;
+  int whiteMinus = 0, blackMinus = 0;
+  int whiteMayBeKilled = 0, blackMayBeKilled = 0;
   int kMov[8][2] = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
   int kingMov[8][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, 1}, {0, -1}, {-1, 0}, {1, 0}};
   bool grid[2][6][5] = {false};
@@ -23,7 +25,7 @@ int State::evaluate(){
     for (int j = 0; j < BOARD_W; j++) {
       whiteScore += scoreTable[board.board[0][i][j] - '0'];
       blackScore += scoreTable[board.board[1][i][j] - '0'];
-      switch(board.board[0][i][j] - '0') {
+      switch((chess)(board.board[0][i][j] - '0')) {
         case PAWN:
           if (i == 0) whiteScore += 5;
           if (board.board[0][i - 1][j + 1] > '0') grid[1][i - 1][j + 1] = true;
@@ -72,7 +74,7 @@ int State::evaluate(){
         default:
           break;
       }
-      switch(board.board[1][i][j] - '0') {
+      switch((chess)(board.board[1][i][j] - '0')) {
         case PAWN:
           if (i == BOARD_H - 1) blackScore += 5;
           if (board.board[1][i - 1][j + 1] > '0') grid[0][i - 1][j + 1] = true;
@@ -126,59 +128,20 @@ int State::evaluate(){
 
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
+      // std::cout << "kkk\n";
       if (grid[0][i][j]) {
-        switch(board.board[0][i][j] - '0') {
-          case PAWN:
-            whiteScore -= 2;
-            break;
-          case ROOK:
-            whiteScore -= 6;
-            break;
-          case KNIGHT:
-            whiteScore -= 7;
-            break;
-          case BISHOP:
-            whiteScore -= 8;
-            break;
-          case QUEEN:
-            whiteScore -= 20;
-            break;
-          case KING:
-            whiteScore -= 1000000;
-            break;
-          default:
-            break;
-        }
+        whiteMinus += scoreTable[board.board[0][i][j] - '0'];
+        if (board.board[0][i][j] > '0') whiteMayBeKilled++;
       }
       
       if (grid[1][i][j]) {
-        switch(board.board[1][i][j] - '0') {
-          case PAWN:
-            blackScore -= 2;
-            break;
-          case ROOK:
-            blackScore -= 6;
-            break;
-          case KNIGHT:
-            blackScore -= 7;
-            break;
-          case BISHOP:
-            blackScore -= 8;
-            break;
-          case QUEEN:
-            blackScore -= 20;
-            break;
-          case KING:
-            blackScore -= 1000000;
-            break;
-          default:
-            break;
-        }
+        blackMinus += scoreTable[board.board[1][i][j] - '0'];
+        if (board.board[1][i][j] > '0') blackMayBeKilled++;
       }
     }
   }
 
-  return player ? whiteScore - blackScore : blackScore - whiteScore;
+  return player ? whiteScore - whiteMinus / whiteMayBeKilled - blackMinus / blackMayBeKilled - blackScore : blackScore - blackMinus / blackMayBeKilled - whiteMinus / whiteMayBeKilled - whiteScore;
 }
 
 
