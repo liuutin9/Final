@@ -20,7 +20,6 @@ Move Minimax::get_move(State *state, int depth){
   if(!state->legal_actions.size())
     state->get_legal_actions();
   
-  
   return getMinimax(state, depth);
 }
 
@@ -41,14 +40,14 @@ int countMinimax(State* state, int depth) {
   int rt_max = INT_MIN;
   int rt_min = INT_MAX;
 
+  state->get_legal_actions();
+
   if (!state->legal_actions.size()) {
-    state->get_legal_actions();
-    if (!state->legal_actions.size())
-      return state->evaluate();
+    return state->evaluate();
   }
 
   for (Move it : state->legal_actions) {
-    if (depth == 3) return state->evaluate();
+    if (depth == 5) return state->evaluate();
     else if (depth % 2 == 0) {
       int result = countMinimax(state->next_state(it), depth + 1);
       rt_max = rt_max > result ? rt_max : result;
