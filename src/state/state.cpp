@@ -20,23 +20,10 @@ int State::evaluate(){
     for (int j = 0; j < BOARD_W; j++) {
       myScore += scoreTable[board.board[player][i][j] - '0'];
       opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'];
-      if (!player && board.board[player][i][j] == '1') {
-        myScore += scoreTable[board.board[player][i][j] - '0'] * (BOARD_H - 1 - i);
-      }
-      else {
-        myScore += scoreTable[board.board[player][i][j] - '0'] * (i);
-      }
-      if (!player && board.board[player][i][j] == '1') {
-        opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'] * (i);
-      }
-      else {
-        opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'] * (BOARD_H - 1 - i);
-      }
     }
   }
 
   for (Move ns : legal_actions) {
-    // Board tmp;
     if (board.board[player ^ 1][ns.second.first][ns.second.second] == '6') {
       return INT_MAX;
     }
@@ -45,7 +32,7 @@ int State::evaluate(){
     }
   }
 
-  return myScore - opponentScore;
+  return constPlayer == player ? myScore - opponentScore : opponentScore - myScore;
 }
 
 
@@ -71,7 +58,7 @@ State* State::next_state(Move move){
   next.board[this->player][from.first][from.second] = 0;
   next.board[this->player][to.first][to.second] = moved;
   
-  State* next_state = new State(next, 1-this->player);
+  State* next_state = new State(next, 1-this->player, this->constPlayer);
   
   if(this->game_state != WIN)
     next_state->get_legal_actions();

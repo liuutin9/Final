@@ -23,8 +23,7 @@ Move Minimax::get_move(State *state, int depth){
   Move rt = *state->legal_actions.begin();
   for (Move ns : state->legal_actions) {
     State* newState = state->next_state(ns);
-    if (newState->game_state == WIN && ns != *state->legal_actions.rbegin()) continue;
-    int result = countMinimax(newState, depth, /*false*/true);
+    int result = countMinimax(newState, depth, false);
     if (result >= hScore) {
       hScore = result;
       rt = ns;
@@ -37,14 +36,13 @@ Move Minimax::get_move(State *state, int depth){
 int countMinimax(State* state, int depth, bool maxPlayer) {
   if(!state->legal_actions.size())
     state->get_legal_actions();
-  if (depth == 0 || !state->legal_actions.size()) {
+  if (depth == 0 || !state->legal_actions.size() || state->game_state == WIN) {
     return state->evaluate();
   }
   if (maxPlayer) {
     int rt = INT_MIN;
     for (auto ns : state->legal_actions) {
       State* newState = state->next_state(ns);
-      if (newState->game_state == WIN) return INT_MIN;
       int result = countMinimax(newState, depth - 1, false);
       rt = rt > result ? rt : result;
     }
@@ -54,7 +52,6 @@ int countMinimax(State* state, int depth, bool maxPlayer) {
     int rt = INT_MAX;
     for (auto ns : state->legal_actions) {
       State* newState = state->next_state(ns);
-      if (newState->game_state == WIN) return INT_MAX;
       int result = countMinimax(newState, depth - 1, true);
       rt = rt < result ? rt : result;
     }
