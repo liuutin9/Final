@@ -32,7 +32,7 @@ int State::evaluate(bool maxPlayer){
     }
   }
 
-  return maxPlayer ? myScore - opponentScore : opponentScore - myScore;
+  return !maxPlayer ? myScore - opponentScore : opponentScore - myScore;
 }
 
 

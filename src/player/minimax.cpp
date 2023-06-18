@@ -40,10 +40,10 @@ void read_board(std::ifstream& fin) {
  */
 void write_valid_spot(std::ofstream& fout) {
   // Keep updating the output until getting killed.
-  int d = 5;
+  int d = 2;
   while(true) {
     // Choose a random spot.
-    auto move = Minimax::get_move(root, 3);
+    auto move = Minimax::get_move(root, d++);
     fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
     
