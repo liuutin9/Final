@@ -24,7 +24,7 @@ Move Minimax::get_move(State *state, int depth){
   for (Move ns : state->legal_actions) {
     State* newState = state->next_state(ns);
     if (newState->game_state == WIN && ns != *state->legal_actions.rbegin()) continue;
-    int result = countMinimax(newState, depth, false);
+    int result = countMinimax(newState, depth, /*false*/true);
     if (result >= hScore) {
       hScore = result;
       rt = ns;

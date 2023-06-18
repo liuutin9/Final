@@ -21,26 +21,27 @@ int State::evaluate(){
       myScore += scoreTable[board.board[player][i][j] - '0'];
       opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'];
       if (!player && board.board[player][i][j] == '1') {
-        myScore += scoreTable[board.board[player][i][j] - '0'] * (BOARD_H - 2 - i);
+        myScore += scoreTable[board.board[player][i][j] - '0'] * (BOARD_H - 1 - i);
       }
       else {
-        myScore += scoreTable[board.board[player][i][j] - '0'] * (i - 1);
+        myScore += scoreTable[board.board[player][i][j] - '0'] * (i);
       }
       if (!player && board.board[player][i][j] == '1') {
-        opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'] * (i - 1);
+        opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'] * (i);
       }
       else {
-        opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'] * (BOARD_H - 2 - i);
+        opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'] * (BOARD_H - 1 - i);
       }
     }
   }
 
   for (Move ns : legal_actions) {
+    // Board tmp;
     if (board.board[player ^ 1][ns.second.first][ns.second.second] == '6') {
       return INT_MAX;
     }
     else if (board.board[player ^ 1][ns.second.first][ns.second.second] > '0') {
-      myScore += scoreTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'] / 2;
+      myScore += scoreTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'] / 5;
     }
   }
 
