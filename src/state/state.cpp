@@ -16,13 +16,22 @@ int scoreTable[7] = {0, 20, 60, 70, 80, 200, 0};
 int State::evaluate(){
   // [TODO] design your own evaluation function
   int myScore = 0, opponentScore = 0;
-  // int myMinus = 0, opponentMinus = 0;
-  // int myMayBeKilled = 0, opponentMayBeKilled = 0;
-  // bool grid[2][6][5] = {false};
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
       myScore += scoreTable[board.board[player][i][j] - '0'];
       opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'];
+      if (!player && board.board[player][i][j] == '1') {
+        myScore += scoreTable[board.board[player][i][j] - '0'] * (BOARD_H - 2 - i);
+      }
+      else {
+        myScore += scoreTable[board.board[player][i][j] - '0'] * (i - 1);
+      }
+      if (!player && board.board[player][i][j] == '1') {
+        opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'] * (i - 1);
+      }
+      else {
+        opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'] * (BOARD_H - 2 - i);
+      }
     }
   }
 
@@ -31,7 +40,7 @@ int State::evaluate(){
       return INT_MAX;
     }
     else if (board.board[player ^ 1][ns.second.first][ns.second.second] > '0') {
-      myScore += scoreTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'] / 5;
+      myScore += scoreTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'] / 2;
     }
   }
 
