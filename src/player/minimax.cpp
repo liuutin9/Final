@@ -28,7 +28,7 @@ void read_board(std::ifstream& fin) {
       // std::cout << std::endl;
     }
   }
-  root = new State(board, player, player);
+  root = new State(board, player);
   root->get_legal_actions();
 }
 
@@ -43,7 +43,7 @@ void write_valid_spot(std::ofstream& fout) {
   int d = 5;
   while(true) {
     // Choose a random spot.
-    auto move = Minimax::get_move(root, d++);
+    auto move = Minimax::get_move(root, d);
     fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
     

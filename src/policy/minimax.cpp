@@ -37,7 +37,7 @@ int countMinimax(State* state, int depth, bool maxPlayer) {
   if(!state->legal_actions.size())
     state->get_legal_actions();
   if (depth == 0 || !state->legal_actions.size() || state->game_state == WIN) {
-    return state->evaluate();
+    return state->evaluate(maxPlayer);
   }
   if (maxPlayer) {
     int rt = INT_MIN;

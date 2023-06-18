@@ -51,14 +51,13 @@ class State{
     Board board;
     int player = 0;
     std::vector<Move> legal_actions;
-    int constPlayer;
     
     State(){};
-    State(int player, int cp): player(player), constPlayer(cp){};
-    State(Board board, int cp): board(board), constPlayer(cp){};
-    State(Board board, int player, int cp): board(board), player(player), constPlayer(cp){};
+    State(int player): player(player){};
+    State(Board board): board(board){};
+    State(Board board, int player): board(board), player(player){};
     
-    int evaluate();
+    int evaluate(bool maxPlayer);
     State* next_state(Move move);
     void get_legal_actions();
     std::string encode_output();

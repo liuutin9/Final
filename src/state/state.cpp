@@ -13,7 +13,7 @@ int scoreTable[7] = {0, 20, 60, 70, 80, 200, 0};
  * 
  * @return int 
  */
-int State::evaluate(){
+int State::evaluate(bool maxPlayer){
   // [TODO] design your own evaluation function
   int myScore = 0, opponentScore = 0;
   for (int i = 0; i < BOARD_H; i++) {
@@ -32,7 +32,7 @@ int State::evaluate(){
     }
   }
 
-  return constPlayer == player ? myScore - opponentScore : opponentScore - myScore;
+  return maxPlayer ? myScore - opponentScore : opponentScore - myScore;
 }
 
 
@@ -58,7 +58,7 @@ State* State::next_state(Move move){
   next.board[this->player][from.first][from.second] = 0;
   next.board[this->player][to.first][to.second] = moved;
   
-  State* next_state = new State(next, 1-this->player, this->constPlayer);
+  State* next_state = new State(next, 1-this->player);
   
   if(this->game_state != WIN)
     next_state->get_legal_actions();
