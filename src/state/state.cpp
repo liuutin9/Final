@@ -37,7 +37,7 @@ int State::evaluate(bool maxPlayer){
       int tmp = scoreTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'];
       int scale = scaleTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'];
       // myBonus = myBonus > tmp ? myBonus : tmp;
-      myBonus += tmp * 0.28/* * scale*/;
+      myBonus += tmp * 0.55/* * scale*/;
     }
   }
 

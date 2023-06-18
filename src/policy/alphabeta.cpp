@@ -1,5 +1,6 @@
 #include <cstdlib>
-#include <bits/stdc++.h>
+#include <limits.h>
+#include <cmath>
 
 #include "../state/state.hpp"
 #include "./alphabeta.hpp"
@@ -13,9 +14,9 @@
  * @return Move 
  */
 
-int countMinimax(State* state, int depth, bool maxPlayer);
+int countAlphaBeta(State* state, int depth, bool maxPlayer, int alpha, int beta);
 
-Move Minimax::get_move(State *state, int depth){
+Move AlphaBeta::get_move(State *state, int depth){
   if(!state->legal_actions.size())
     state->get_legal_actions();
 
@@ -23,7 +24,7 @@ Move Minimax::get_move(State *state, int depth){
   Move rt = *state->legal_actions.begin();
   for (Move ns : state->legal_actions) {
     State* newState = state->next_state(ns);
-    int result = countMinimax(newState, depth, false);
+    int result = countAlphaBeta(newState, depth, false, INT_MIN, INT_MAX);
     if (result >= hScore) {
       hScore = result;
       rt = ns;
@@ -33,7 +34,7 @@ Move Minimax::get_move(State *state, int depth){
   return rt;
 }
 
-int countMinimax(State* state, int depth, bool maxPlayer) {
+int countAlphaBeta(State* state, int depth, bool maxPlayer, int alpha, int beta) {
   if(!state->legal_actions.size())
     state->get_legal_actions();
   if (depth == 0 || !state->legal_actions.size() || state->game_state == WIN) {
@@ -41,19 +42,23 @@ int countMinimax(State* state, int depth, bool maxPlayer) {
   }
   if (maxPlayer) {
     int rt = INT_MIN;
-    for (auto ns : state->legal_actions) {
+    for (Move ns : state->legal_actions) {
       State* newState = state->next_state(ns);
-      int result = countMinimax(newState, depth - 1, false);
-      rt = rt > result ? rt : result;
+      int result = countAlphaBeta(newState, depth - 1, false, alpha, beta);
+      rt = std::max(rt, result);
+      alpha = std::max(alpha, rt);
+      if (alpha >= beta) break;
     }
     return rt;
   }
   else {
     int rt = INT_MAX;
-    for (auto ns : state->legal_actions) {
+    for (Move ns : state->legal_actions) {
       State* newState = state->next_state(ns);
-      int result = countMinimax(newState, depth - 1, true);
-      rt = rt < result ? rt : result;
+      int result = countAlphaBeta(newState, depth - 1, false, alpha, beta);
+      rt = std::min(rt, result);
+      beta = std::min(alpha, rt);
+      if (beta <= alpha) break;
     }
     return rt;
   }
