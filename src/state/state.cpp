@@ -6,8 +6,8 @@
 #include "./state.hpp"
 #include "../config.hpp"
 
-int scoreTable[7] = {0, 20, 60, 70, 80, 200, 1000};
-float scaleTable[7] = {0, 1, 1.2, 1.3, 1.3, 1.4, 1000};
+int scoreTable[7] = {0, 20, 60, 70, 80, 200, 1000000};
+float scaleTable[7] = {0, 1, 1.4, 1.4, 1.7, 2, 1000};
 
 /**
  * @brief evaluate the state
@@ -37,7 +37,7 @@ int State::evaluate(bool maxPlayer){
       int tmp = scoreTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'];
       int scale = scaleTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'];
       // myBonus = myBonus > tmp ? myBonus : tmp;
-      myBonus += tmp * 0.47 * scale/*scale*/;
+      myBonus += tmp * 0.28/* * scale*/;
     }
   }
 
