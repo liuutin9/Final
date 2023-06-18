@@ -55,7 +55,7 @@ int countAlphaBeta(State* state, int depth, bool maxPlayer, int alpha, int beta)
     int rt = INT_MAX;
     for (Move ns : state->legal_actions) {
       State* newState = state->next_state(ns);
-      int result = countAlphaBeta(newState, depth - 1, false, alpha, beta);
+      int result = countAlphaBeta(newState, depth - 1, true, alpha, beta);
       rt = std::min(rt, result);
       beta = std::min(alpha, rt);
       if (beta <= alpha) break;

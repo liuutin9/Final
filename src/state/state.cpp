@@ -28,18 +28,20 @@ int State::evaluate(bool maxPlayer){
     get_legal_actions();
 
   int myBonus = 0;
-
+  
+  
   for (Move ns : legal_actions) {
     if (board.board[player ^ 1][ns.second.first][ns.second.second] == '6') {
       return maxPlayer ? INT_MAX : INT_MIN;
     }
     else if (board.board[player ^ 1][ns.second.first][ns.second.second] > '0') {
       int tmp = scoreTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'];
-      int scale = scaleTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'];
+      // int scale = scaleTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'];
       // myBonus = myBonus > tmp ? myBonus : tmp;
-      myBonus += tmp * 0.55/* * scale*/;
+      myBonus += tmp * 0.6;
     }
   }
+  
 
   return maxPlayer ? (myScore + myBonus) - opponentScore : opponentScore - (myScore + myBonus);
 }
