@@ -6,7 +6,7 @@
 #include "./state.hpp"
 #include "../config.hpp"
 
-int scoreTable[7] = {0, 20, 60, 70, 80, 200, 1000000};
+int scoreTable[7] = {0, 10, 30, 30, 50, 90, 900};
 float scaleTable[7] = {0, 1, 1.4, 1.4, 1.7, 2, 1000};
 
 /**
@@ -24,13 +24,13 @@ int State::evaluate(bool maxPlayer){
     }
   }
 
-  if (!legal_actions.size())
-    get_legal_actions();
+  /*if (!legal_actions.size())
+    get_legal_actions();*/
 
   int myBonus = 0;
   
   
-  for (Move ns : legal_actions) {
+  /*for (Move ns : legal_actions) {
     if (board.board[player ^ 1][ns.second.first][ns.second.second] == '6') {
       return maxPlayer ? INT_MAX : INT_MIN;
     }
@@ -38,9 +38,9 @@ int State::evaluate(bool maxPlayer){
       int tmp = scoreTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'];
       // int scale = scaleTable[board.board[player ^ 1][ns.second.first][ns.second.second] - '0'];
       // myBonus = myBonus > tmp ? myBonus : tmp;
-      myBonus += tmp * 0.6;
+      myBonus += tmp * 0.2;
     }
-  }
+  }*/
   
 
   return maxPlayer ? (myScore + myBonus) - opponentScore : opponentScore - (myScore + myBonus);
