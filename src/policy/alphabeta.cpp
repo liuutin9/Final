@@ -20,7 +20,7 @@ Move AlphaBeta::get_move(State *state, int depth){
   if(!state->legal_actions.size())
     state->get_legal_actions();
 
-  int hScore = INT_MIN;
+  int hScore = -5000;
   Move rt = *state->legal_actions.begin();
   for (Move ns : state->legal_actions) {
     State* newState = state->next_state(ns);
@@ -41,7 +41,7 @@ int countAlphaBeta(State* state, int depth, bool maxPlayer, int alpha, int beta)
     return state->evaluate(maxPlayer);
   }
   if (maxPlayer) {
-    int rt = INT_MIN;
+    int rt = -5000;
     for (Move ns : state->legal_actions) {
       State* newState = state->next_state(ns);
       int result = countAlphaBeta(newState, depth - 1, false, alpha, beta);
@@ -52,7 +52,7 @@ int countAlphaBeta(State* state, int depth, bool maxPlayer, int alpha, int beta)
     return rt;
   }
   else {
-    int rt = INT_MAX;
+    int rt = 5000;
     for (Move ns : state->legal_actions) {
       State* newState = state->next_state(ns);
       int result = countAlphaBeta(newState, depth - 1, true, alpha, beta);
