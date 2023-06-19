@@ -6,8 +6,8 @@
 #include "./state.hpp"
 #include "../config.hpp"
 
-int scoreTable[7] = {0, 2, 6, 7, 8, 20, 1000};
-int bonusTable[7] = {0, 1, 3, 3, 4, 10, 1000};
+int scoreTable[7] = {0, 2, 6, 7, 8, 20, 900};
+int bonusTable[7] = {0, 1, 3, 3, 4, 13, 900};
 
 /**
  * @brief evaluate the state
@@ -16,16 +16,93 @@ int bonusTable[7] = {0, 1, 3, 3, 4, 10, 1000};
  */
 int State::evaluate(bool maxPlayer){
   // [TODO] design your own evaluation function
-  int myScore = 0, opponentScore = 0;
+  int myScore = 0, opponentScore = 0, myMinus = 0, rt;
+  bool grid[BOARD_H][BOARD_W] = {false};
+  int knightMove[8][2] = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2}, {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
+  int kingMove[8][2] = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
       myScore += scoreTable[board.board[player][i][j] - '0'];
       opponentScore += scoreTable[board.board[player ^ 1][i][j] - '0'];
+
+      /*switch(board.board[player ^ 1][i][j] - '0') {
+        case PAWN:
+          if (player == 0)
+            grid[i - 1][j + 1] = grid[i - 1][j - 1] = true;
+          else
+            grid[i + 1][j + 1] = grid[i + 1][j - 1] = true;
+          break;
+        case KNIGHT:
+          for (int k = 0; k < 8; k++) {
+            if (i + knightMove[k][0] >= 0 && i + knightMove[k][0] < BOARD_H && j + knightMove[k][1] >= 0 && j + knightMove[k][1] < BOARD_W)
+              grid[i + knightMove[k][0]][j + knightMove[k][1]] = true;
+          }
+          break;
+        case ROOK:
+          for (int k = 0; k < BOARD_H; k++) {
+            grid[k][j] = true;
+          }
+          for (int k = 0; k < BOARD_W; k++) {
+            grid[i][k] = true;
+          }
+          break;
+        case BISHOP:
+          for (int k = 1; k < BOARD_W; k++) {
+            if (i - k >= 0 && j - k >= 0)
+              grid[i - k][j - k] = true;
+            if (i - k >= 0 && j + k < BOARD_W)
+              grid[i - k][j + k] = true;
+            if (i + k < BOARD_H && j - k >= 0)
+              grid[i + k][j - k] = true;
+            if (i + k < BOARD_H && j + k < BOARD_W)
+              grid[i + k][j + k] = true;
+          }
+          break;
+        case QUEEN:
+          for (int k = 0; k < BOARD_H; k++) {
+            grid[k][j] = true;
+          }
+          for (int k = 0; k < BOARD_W; k++) {
+            grid[i][k] = true;
+          }
+          for (int k = 1; k < BOARD_W; k++) {
+            if (i - k >= 0 && j - k >= 0)
+              grid[i - k][j - k] = true;
+            if (i - k >= 0 && j + k < BOARD_W)
+              grid[i - k][j + k] = true;
+            if (i + k < BOARD_H && j - k >= 0)
+              grid[i + k][j - k] = true;
+            if (i + k < BOARD_H && j + k < BOARD_W)
+              grid[i + k][j + k] = true;
+          }
+          break;
+        case KING:
+          for (int k = 0; k < 8; k++) {
+            if (i + kingMove[k][0] >= 0 && i + kingMove[k][0] < BOARD_H && j + kingMove[k][1] >= 0 && j + kingMove[k][1] < BOARD_W)
+              grid[i + kingMove[k][0]][j + kingMove[k][1]] = true;
+          }
+          break;
+        default:;
+      }*/
     }
   }
 
-  int myBonus = 0;
   
+  /*for (int i = 0; i < BOARD_H; i++) {
+    for (int j = 0; j < BOARD_W; j++) {
+      if (grid[i][j]) {
+        myMinus += scoreTable[board.board[player][i][j] - '0'] * 0.2;
+      }
+    }
+  }
+
+  myScore -= myMinus;*/
+  
+
+  if (!legal_actions.size())
+    get_legal_actions();
+
+  int myBonus = 0;
   
   for (Move ns : legal_actions) {
     if (board.board[player ^ 1][ns.second.first][ns.second.second] > '0') {
@@ -33,9 +110,13 @@ int State::evaluate(bool maxPlayer){
       myBonus += tmp;
     }
   }
-  
 
-  return maxPlayer ? (myScore + myBonus) - opponentScore : opponentScore - (myScore + myBonus);
+  myScore += myBonus * 0.2;
+
+  if (maxPlayer) rt = myScore - opponentScore;
+  else rt = opponentScore - myScore;
+  // std::cout << "Return: " << rt << '\n';
+  return rt;
 }
 
 

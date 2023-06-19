@@ -43,7 +43,7 @@ void write_valid_spot(std::ofstream& fout) {
   int d = 2;
   while(true) {
     // Choose a random spot.
-    auto move = AlphaBeta::get_move(root, d++);
+    auto move = AlphaBeta::get_move(root, /*d++*/5);
     fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
     
