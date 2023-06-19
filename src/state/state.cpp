@@ -7,7 +7,6 @@
 #include "../config.hpp"
 
 int scoreTable[7] = {0, 2, 6, 7, 8, 20, 200};
-int bonusTable[7] = {0, 1, 3, 3, 4, 13, 200};
 
 /**
  * @brief evaluate the state
@@ -16,7 +15,7 @@ int bonusTable[7] = {0, 1, 3, 3, 4, 13, 200};
  */
 int State::evaluate(bool maxPlayer){
   // [TODO] design your own evaluation function
-  int myScore = 0, opponentScore = 0, myMinus = 0, rt;
+  int myScore = 0, opponentScore = 0, rt;
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
       myScore += scoreTable[board.board[player][i][j]];
