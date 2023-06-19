@@ -13,7 +13,7 @@
  * @return Move 
  */
 
-int countMinimax(State* state, int depth, bool maxPlayer, int constPlayer);
+int countMinimax(State* state, int depth, bool maxPlayer);
 
 Move Minimax::get_move(State *state, int depth){
   if(!state->legal_actions.size())
@@ -23,7 +23,7 @@ Move Minimax::get_move(State *state, int depth){
   Move rt = *state->legal_actions.begin();
   for (Move ns : state->legal_actions) {
     State* newState = state->next_state(ns);
-    int result = countMinimax(newState, depth, false, state->player);
+    int result = countMinimax(newState, depth, false);
     if (result >= hScore) {
       hScore = result;
       rt = ns;
@@ -33,30 +33,37 @@ Move Minimax::get_move(State *state, int depth){
   return rt;
 }
 
-int countMinimax(State* state, int depth, bool maxPlayer, int constPlayer) {
+int countMinimax(State* state, int depth, bool maxPlayer) {
   if(!state->legal_actions.size())
     state->get_legal_actions();
-  if (depth == 0 || !state->legal_actions.size() || state->game_state == WIN) {
-    return state->evaluate(constPlayer);
+
+  if (state->game_state == WIN && maxPlayer)
+    return 5000000;
+  else if (state->game_state == WIN && !maxPlayer)
+    return -5000000;
+
+  
+  if (depth == 0) {
+    return state->evaluate(maxPlayer);
   }
+
+
   if (maxPlayer) {
     int rt = -1000000;
     for (auto ns : state->legal_actions) {
       State* newState = state->next_state(ns);
-      int result = countMinimax(newState, depth, false, constPlayer);
+      int result = countMinimax(newState, depth, false);
       rt = std::max(rt, result);
     }
-    // std::cout << "maxPlayer: " << rt << '\n';
     return rt;
   }
   else {
     int rt = 1000000;
     for (auto ns : state->legal_actions) {
       State* newState = state->next_state(ns);
-      int result = countMinimax(newState, depth - 1, true, constPlayer);
+      int result = countMinimax(newState, depth - 1, true);
       rt = std::min(rt, result);
     }
-    // std::cout << "minPlayer: " << rt << '\n';
     return rt;
   }
 }

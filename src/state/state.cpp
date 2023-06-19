@@ -6,33 +6,27 @@
 #include "./state.hpp"
 #include "../config.hpp"
 
-int scoreTable[7] = {0, 2, 6, 7, 8, 20, 10000};
-int bonusTable[7] = {0, 1, 3, 3, 4, 13, 10000};
+int scoreTable[7] = {0, 2, 6, 7, 8, 20, 200};
+int bonusTable[7] = {0, 1, 3, 3, 4, 13, 200};
 
 /**
  * @brief evaluate the state
  * 
  * @return int 
  */
-int State::evaluate(int constPlayer){
+int State::evaluate(bool maxPlayer){
   // [TODO] design your own evaluation function
   int myScore = 0, opponentScore = 0, myMinus = 0, rt;
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
-      myScore += scoreTable[board.board[constPlayer][i][j]];
-      opponentScore += scoreTable[board.board[1 - constPlayer][i][j]];
+      myScore += scoreTable[board.board[player][i][j]];
+      opponentScore += scoreTable[board.board[player ^ 1][i][j]];
     }
   }
 
   rt = myScore - opponentScore;
-  if (constPlayer == player) {
-    std::cout << constPlayer << " :: " << player << " : " << rt;
-    return rt;
-  }
-  else {
-    std::cout << constPlayer << " :: " << player << " : " << -rt;
-    return -rt;
-  }
+
+  return maxPlayer ? rt : -rt;
 }
 
 
