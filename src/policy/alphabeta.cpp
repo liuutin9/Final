@@ -24,7 +24,7 @@ Move AlphaBeta::get_move(State *state, int depth){
   Move rt = *state->legal_actions.begin();
   for (Move ns : state->legal_actions) {
     State* newState = state->next_state(ns);
-    int result = countAlphaBeta(newState, depth, false, INT_MIN, INT_MAX);
+    int result = countAlphaBeta(newState, depth, false, -1500000, 1500000);
     if (result >= hScore) {
       hScore = result;
       rt = ns;
@@ -43,28 +43,27 @@ int countAlphaBeta(State* state, int depth, bool maxPlayer, int alpha, int beta)
   else if (state->game_state == WIN && !maxPlayer)
     return -5000000;
 
+  
   if (depth == 0) {
     return state->evaluate(maxPlayer);
   }
+
+
   if (maxPlayer) {
     int rt = -1000000;
-    for (Move ns : state->legal_actions) {
+    for (auto ns : state->legal_actions) {
       State* newState = state->next_state(ns);
-      int result = countAlphaBeta(newState, depth - 1, false, alpha, beta);
+      int result = countAlphaBeta(newState, depth, false, alpha, beta);
       rt = std::max(rt, result);
-      alpha = std::max(alpha, rt);
-      if (alpha >= beta) break;
     }
     return rt;
   }
   else {
     int rt = 1000000;
-    for (Move ns : state->legal_actions) {
+    for (auto ns : state->legal_actions) {
       State* newState = state->next_state(ns);
       int result = countAlphaBeta(newState, depth - 1, true, alpha, beta);
       rt = std::min(rt, result);
-      beta = std::min(alpha, rt);
-      if (beta <= alpha) break;
     }
     return rt;
   }
