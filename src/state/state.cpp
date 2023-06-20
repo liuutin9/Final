@@ -15,13 +15,13 @@ int scoreTable[7] = {0, 2, 6, 7, 8, 20, 200};
  */
 int State::evaluate(bool maxPlayer){
   // [TODO] design your own evaluation function
-  int myScore = 0, opponentScore = 0, myMinus = 0, rt;
-  int R[2] = {-1, -1}, B[2] = {-1, -1}, Q[2] = {-1, -1}, K[2] = {-1, -1}; 
+  int myScore = 0, opponentScore = 0, /*myMinus = 0,*/ rt;
+  // int R[2] = {-1, -1}, B[2] = {-1, -1}, Q[2] = {-1, -1}, K[2] = {-1, -1}; 
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
       myScore += scoreTable[board.board[player][i][j]];
       opponentScore += scoreTable[board.board[player ^ 1][i][j]];
-      switch(board.board[player][i][j]) {
+      /*switch(board.board[player][i][j]) {
         case ROOK:
           R[0] = i, R[1] = j;
           break;
@@ -32,11 +32,11 @@ int State::evaluate(bool maxPlayer){
           Q[0] = i, Q[1] = j;
           break;
         default:;
-      }
+      }*/
     }
   }
 
-  if (R[0] != -1) {
+  /*if (R[0] != -1) {
     if (K[0] == R[0] || K[1] == R[1]) myMinus += 1;
   }
   if (B[0] != -1) {
@@ -44,9 +44,9 @@ int State::evaluate(bool maxPlayer){
   }
   if (Q[0] != -1) {
     if (abs(K[0] - Q[0]) == abs(K[1] - Q[1]) || K[0] == Q[0] || K[1] == Q[1]) myMinus += 3;
-  }
+  }*/
 
-  rt = myScore - opponentScore - myMinus;
+  rt = myScore - opponentScore/* - myMinus*/;
 
   return maxPlayer ? rt : -rt;
 }
