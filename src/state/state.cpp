@@ -6,7 +6,7 @@
 #include "./state.hpp"
 #include "../config.hpp"
 
-int scoreTable[7] = {0, 2, 6, 7, 8, 20, 200};
+int scoreTable[7] = {0, 20, 60, 70, 80, 200, 2000};
 
 /**
  * @brief evaluate the state
@@ -15,15 +15,38 @@ int scoreTable[7] = {0, 2, 6, 7, 8, 20, 200};
  */
 int State::evaluate(bool maxPlayer){
   // [TODO] design your own evaluation function
-  int myScore = 0, opponentScore = 0, rt;
+  int myScore = 0, opponentScore = 0, /*myMinus = 0,*/ rt;
+  // int R[2] = {-1, -1}, B[2] = {-1, -1}, Q[2] = {-1, -1}, K[2] = {-1, -1}; 
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
       myScore += scoreTable[board.board[player][i][j]];
       opponentScore += scoreTable[board.board[player ^ 1][i][j]];
+      /*switch(board.board[player][i][j]) {
+        case ROOK:
+          R[0] = i, R[1] = j;
+          break;
+        case BISHOP:
+          B[0] = i, B[1] = j;
+          break;
+        case QUEEN:
+          Q[0] = i, Q[1] = j;
+          break;
+        default:;
+      }*/
     }
   }
 
-  rt = myScore - opponentScore;
+  /*if (R[0] != -1) {
+    if (K[0] == R[0] || K[1] == R[1]) myMinus += 30;
+  }
+  if (B[0] != -1) {
+    if (abs(K[0] - B[0]) == abs(K[1] - B[1])) myMinus += 40;
+  }
+  if (Q[0] != -1) {
+    if (abs(K[0] - Q[0]) == abs(K[1] - Q[1]) || K[0] == Q[0] || K[1] == Q[1]) myMinus += 50;
+  }*/
+
+  rt = myScore - opponentScore/* - myMinus*/;
 
   return maxPlayer ? rt : -rt;
 }
