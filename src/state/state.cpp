@@ -6,7 +6,7 @@
 #include "./state.hpp"
 #include "../config.hpp"
 
-int scoreTable[7] = {0, 20, 60, 70, 80, 200, 2000};
+int scoreTable[7] = {0, 2, 6, 7, 8, 20, 200};
 
 /**
  * @brief evaluate the state
