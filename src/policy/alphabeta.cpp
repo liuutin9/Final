@@ -55,6 +55,8 @@ int countAlphaBeta(State* state, int depth, bool maxPlayer, int alpha, int beta)
       State* newState = state->next_state(ns);
       int result = countAlphaBeta(newState, depth, false, alpha, beta);
       rt = std::max(rt, result);
+      alpha = std::max(rt, alpha);
+      if (alpha >= beta) break;
     }
     return rt;
   }
@@ -64,6 +66,8 @@ int countAlphaBeta(State* state, int depth, bool maxPlayer, int alpha, int beta)
       State* newState = state->next_state(ns);
       int result = countAlphaBeta(newState, depth - 1, true, alpha, beta);
       rt = std::min(rt, result);
+      beta = std::min(rt, beta);
+      if (beta <= alpha) break;
     }
     return rt;
   }
